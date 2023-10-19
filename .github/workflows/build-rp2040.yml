@@ -10,40 +10,48 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    # Get/cache requisite APT packages
     - uses: awalsh128/cache-apt-pkgs-action@v1.3.0
       with:
         packages: cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential libstdc++-arm-none-eabi-newlib
-        
+
+    # Checkout this repo to the workspace
     - uses: actions/checkout@v4
       with:
         path: PhobGCC-SW
-        
+
+    # Cache action for the pico-sdk directory
+    # If the cache doesn't already exist it will be created at the end of the workflow
     - name: cache pico sdk
       id: cache-pico-sdk
       uses: actions/cache@v3
       with:
         path: pico-sdk
         key: rp2040-pico-sdk
-        
+
+    # Clone pico-sdk repo (if pico-sdk not found in cache)
     - name: clone pico-sdk
       if: steps.cache-pico-sdk.outputs.cache-hit != 'true'
       uses: actions/checkout@v4
       with:
         repository: raspberrypi/pico-sdk
         path: pico-sdk
-        
+
+    # Init the submodules for pico-sdk (if pico-sdk not found in cache)
     - name: init pico-sdk submodules
       if: steps.cache-pico-sdk.outputs.cache-hit != 'true'
       run: cd $GITHUB_WORKSPACE/pico-sdk && git submodule update --init
+
+    # Set PICO_SDK_PATH for make steps
+    - name: set env var
+      run: echo "PICO_SDK_PATH=$GITHUB_WORKSPACE/pico-sdk" >> "$GITHUB_ENV"
+
+    - name: cmake
+      run: cd PhobGCC-SW/PhobGCC/rp2040 && mkdir build && cd build && cmake ..
       
+    - name: make
+      run: cd PhobGCC-SW/PhobGCC/rp2040/build && make
+
     - name: log
-      run: echo $GITHUB_WORKSPACE && ls -l $GITHUB_WORKSPACE
-    
-    # - name: make
-    #   run: make
-    
-    # - name: make check
-    #   run: make check
-    
-    # - name: make distcheck
-    #   run: make distcheck
+      run: ls -l PhobGCC-SW/PhobGCC/rp2040/build
+      
