@@ -46,7 +46,6 @@ jobs:
           platforms: |
             - name: "teensy:avr"
               source-url: "https://www.pjrc.com/teensy/package_teensy_index.json"
-              version: 1.56.1
           libraries: |
             - name: curveFitting
             - name: Bolder Flight Systems Eigen
