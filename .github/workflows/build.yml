@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: uncomment include
-        run: sed -i "/${H_FILE}/s://::" PhobGCC/common/phobGCC.h
+        run: sed -i "/\$H_FILE/s://::" PhobGCC/common/phobGCC.h
         
       - uses: arduino/compile-sketches@v1.1.0
         with:
