@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Test Teensy and rp2040 Builds
 
 on:
   push:
@@ -7,8 +7,41 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-teensies:
     runs-on: ubuntu-latest
+    
+    # strategy:
+    #   matrix:
+    #     fqbn:
+    #       - one
+    #       - two
+    #       - three
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: uncomment include
+        run: sed -i '/Phob1_2/s://::' PhobGCC-SW/PhobGCC/common/phobGCC.h
+        
+      - uses: arduino/compile-sketches@v1.1.0
+        with:
+          # fqbn: #{{ matrix.fqbn }}
+          fqbn: "teensy:avr:teensy40"
+          platforms: |
+            - name: "teensy:avr"
+              source-url: "https://www.pjrc.com/teensy/package_teensy_index.json"
+          libraries: |
+            - name: curveFitting
+            - name: Bolder Flight Systems Eigen
+            - name: Bounce2
+            - name: teensytimertool
+              version: 1.0.0
+          sketch-paths: |
+            - PhobGCC
+          
+  build-rp2040:
+    runs-on: ubuntu-latest
+    
     steps:
     - name: apt update
       run: sudo apt update
