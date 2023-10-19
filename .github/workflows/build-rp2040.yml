@@ -17,11 +17,11 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: raspberrypi/pico-sdk
-        path: pico-sdk
+        path: ../../raspberrypi/pico-sdk
     - name: log
       run: echo $GITHUB_WORKSPACE && ls -l $GITHUB_WORKSPACE
-    # - name: init
-    #   run: git submodule update --init
+    - name: init
+      run: cd $GITHUB_WORKSPACE/../../raspberrypi/pico-sdk && git submodule update --init
     # - name: make
     #   run: make
     # - name: make check
