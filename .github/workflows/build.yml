@@ -32,7 +32,7 @@ jobs:
             diode_short: true
 
     env:
-      H_FILE: ${{ format('{0}Teensy{1}{2}.h', matrix.phob_version, matrix.fqbn == 'teensy:avr:teensy32' && '3_2' || '4_0', matrix.diode_short == true && 'DiodeShort' || '') }}
+      H_FILE: ${{ format('{0}Teensy{1}{2}.h', matrix.phob_version, matrix.fqbn == 'teensy:avr:teensy31' && '3_2' || '4_0', matrix.diode_short == true && 'DiodeShort' || '') }}
 
     steps:
       - uses: actions/checkout@v4
