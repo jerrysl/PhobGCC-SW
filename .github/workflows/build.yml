@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         fqbn:
-          #- teensy:avr:teensy32
+          - teensy:avr:teensy32
           - teensy:avr:teensy40
         phob_version:
           - 1_0
@@ -45,7 +45,7 @@ jobs:
           platforms: |
             - name: "teensy:avr"
               source-url: "https://www.pjrc.com/teensy/package_teensy_index.json"
-              version: 1.58.1
+              version: 1.56.1
           libraries: |
             - name: curveFitting
             - name: Bolder Flight Systems Eigen
