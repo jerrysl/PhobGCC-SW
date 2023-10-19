@@ -13,21 +13,37 @@ jobs:
     - uses: awalsh128/cache-apt-pkgs-action@v1.3.0
       with:
         packages: cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential libstdc++-arm-none-eabi-newlib
+        
     - uses: actions/checkout@v4
       with:
         path: PhobGCC-SW
-    - name: setup pico-sdk
+        
+    - name: cache pico sdk
+      id: cache-pico-sdk
+      uses: actions/cache@v3
+      with:
+        path: pico-sdk
+        key: rp2040-pico-sdk
+        
+    - name: clone pico-sdk
+      if: steps.cache-pico-sdk.outputs.cache-hit != 'true'
       uses: actions/checkout@v4
       with:
         repository: raspberrypi/pico-sdk
         path: pico-sdk
+        
+    - name: init pico-sdk submodules
+      if: steps.cache-pico-sdk.outputs.cache-hit != 'true'
+      run: cd $GITHUB_WORKSPACE/pico-sdk && git submodule update --init
+      
     - name: log
       run: echo $GITHUB_WORKSPACE && ls -l $GITHUB_WORKSPACE
-    # - name: init
-    #   run: cd $GITHUB_WORKSPACE/pico-sdk && git submodule update --init
+    
     # - name: make
     #   run: make
+    
     # - name: make check
     #   run: make check
+    
     # - name: make distcheck
     #   run: make distcheck
