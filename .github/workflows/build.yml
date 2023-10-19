@@ -1,6 +1,8 @@
 name: Test Teensy and RP2040 Builds
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
