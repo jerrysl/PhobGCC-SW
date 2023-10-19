@@ -10,10 +10,11 @@ jobs:
   build-teensies:
     runs-on: ubuntu-latest
 
+    # The Teensy 3.2 uses the 3.1 FQBN
     strategy:
       matrix:
         fqbn:
-          - teensy:avr:teensy32
+          - teensy:avr:teensy31
           - teensy:avr:teensy40
         phob_version:
           - 1_0
@@ -23,7 +24,7 @@ jobs:
           - true
           - false
         exclude:
-          - fqbn: teensy:avr:teensy32
+          - fqbn: teensy:avr:teensy31
             phob_version: 1_2
           - fqbn: teensy:avr:teensy40
             phob_version: 1_0
