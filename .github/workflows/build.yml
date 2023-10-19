@@ -34,7 +34,7 @@ jobs:
             phob_version: 1_0
 
     env:
-      H_FILE: ${{ format('{0}Teensy{1}{2}', matrix.phob_version, matrix.fqbn == 'teensy:avr:teensy32' && '3_2' || '4_0', diode_short == true && 'Diode' || '') }}
+      H_FILE: ${{ format('{0}Teensy{1}{2}', matrix.phob_version, matrix.fqbn == 'teensy:avr:teensy32' && '3_2' || '4_0', matrix.diode_short == true && 'Diode' || '') }}
 
     steps:
       - name: verify-env
