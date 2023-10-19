@@ -25,7 +25,7 @@ jobs:
 
     # Uncomment phob 2.0 include
     - name: uncomment include
-      run: sed -i '/Phob2_0/s://::' PhobGCC-SW/common/phobGCC.h
+      run: sed -i '/Phob2_0/s://::' PhobGCC-SW/PhobGCC/common/phobGCC.h
 
     # Cache action for the pico-sdk directory
     # If the cache doesn't already exist it will be created at the end of the workflow
