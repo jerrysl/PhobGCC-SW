@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - uses: awalsh128/cache-apt-pkgs-action@v1.3.0
+      with:
+        packages: cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential libstdc++-arm-none-eabi-newlib
     - uses: actions/checkout@v4
       with:
         path: PhobGCC-SW
@@ -20,8 +23,8 @@ jobs:
         path: pico-sdk
     - name: log
       run: echo $GITHUB_WORKSPACE && ls -l $GITHUB_WORKSPACE
-    - name: init
-      run: cd $GITHUB_WORKSPACE/pico-sdk && git submodule update --init
+    # - name: init
+    #   run: cd $GITHUB_WORKSPACE/pico-sdk && git submodule update --init
     # - name: make
     #   run: make
     # - name: make check
