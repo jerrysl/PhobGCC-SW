@@ -16,7 +16,7 @@ jobs:
     # Get/cache requisite APT packages
     - uses: awalsh128/cache-apt-pkgs-action@v1.3.0
       with:
-        packages: cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential libstdc++-arm-none-eabi-newlib
+        packages: cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
 
     # Checkout this repo to the workspace
     - uses: actions/checkout@v4
