@@ -20,18 +20,16 @@ jobs:
           - 1_0
           - 1_1
           - 1_2
-        include:
-          - phob_version: 1_0
-            diode_short: true
-          - phob_version: 1_1
-            diode_short: true
-          - phob_version: 1_2
-            diode_short: false
+        diode_short:
+          - true
+          - false
         exclude:
           - fqbn: teensy:avr:teensy32
             phob_version: 1_2
           - fqbn: teensy:avr:teensy40
             phob_version: 1_0
+          - phob_version: 1_2
+            diode_short: true
 
     env:
       H_FILE: ${{ format('{0}Teensy{1}{2}', matrix.phob_version, matrix.fqbn == 'teensy:avr:teensy32' && '3_2' || '4_0', matrix.diode_short == true && 'Diode' || '') }}
@@ -43,7 +41,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: uncomment include
-        run: sed -i '/$H_FILE/s://::' PhobGCC/common/phobGCC.h
+        run: sed -i "/$H_FILE/s://::" PhobGCC/common/phobGCC.h
         
       - uses: arduino/compile-sketches@v1.1.0
         with:
