@@ -10,40 +10,35 @@ jobs:
   build-teensies:
     runs-on: ubuntu-latest
 
-    # Awkward logic?
+    # The Teensy 3.2 uses the 3.1 FQBN
     strategy:
       matrix:
         fqbn:
-          - teensy:avr:teensy32
+          - teensy:avr:teensy31
           - teensy:avr:teensy40
         phob_version:
           - 1_0
           - 1_1
           - 1_2
-        include:
-          - phob_version: 1_0
-            diode_short: true
-          - phob_version: 1_1
-            diode_short: true
-          - phob_version: 1_2
-            diode_short: false
+        diode_short:
+          - true
+          - false
         exclude:
-          - fqbn: teensy:avr:teensy32
+          - fqbn: teensy:avr:teensy31
             phob_version: 1_2
           - fqbn: teensy:avr:teensy40
             phob_version: 1_0
+          - phob_version: 1_2
+            diode_short: true
 
     env:
-      H_FILE: ${{ format('{0}Teensy{1}{2}', matrix.phob_version, matrix.fqbn == 'teensy:avr:teensy32' && '3_2' || '4_0', diode_short == true && 'Diode' || '') }}
+      H_FILE: ${{ format('{0}Teensy{1}{2}.h', matrix.phob_version, matrix.fqbn == 'teensy:avr:teensy31' && '3_2' || '4_0', matrix.diode_short == true && 'DiodeShort' || '') }}
 
     steps:
-      - name: verify-env
-        run: echo $H_FILE
-        
       - uses: actions/checkout@v4
 
       - name: uncomment include
-        run: sed -i '/$H_FILE/s://::' PhobGCC/common/phobGCC.h
+        run: sed -i "/$H_FILE/s://::" PhobGCC/common/phobGCC.h
         
       - uses: arduino/compile-sketches@v1.1.0
         with:
@@ -67,23 +62,22 @@ jobs:
     steps:
     - name: apt update
       run: sudo apt update
-      
-    # Get/cache requisite APT packages
-    - uses: awalsh128/cache-apt-pkgs-action@v1.3.0
-      with:
-        packages: cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
+
+    # # DOES NOT WORK
+    # # Get/cache requisite APT packages
+    # - uses: awalsh128/cache-apt-pkgs-action@v1.3.0
+    #   with:
+    #     packages: cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
 
     - name: apt install
       run: sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
 
-    # Checkout this repo to the workspace
     - uses: actions/checkout@v4
       with:
         path: PhobGCC-SW
 
-    # Uncomment phob 2.0 include
     - name: uncomment include
-      run: sed -i '/Phob2_0/s://::' PhobGCC-SW/PhobGCC/common/phobGCC.h
+      run: sed -i '/Phob2_0.h/s://::' PhobGCC-SW/PhobGCC/common/phobGCC.h
 
     # Cache action for the pico-sdk directory
     # If the cache doesn't already exist it will be created at the end of the workflow
@@ -94,7 +88,6 @@ jobs:
         path: pico-sdk
         key: rp2040-pico-sdk
 
-    # Clone pico-sdk repo (if pico-sdk not found in cache)
     - name: clone pico-sdk
       if: steps.cache-pico-sdk.outputs.cache-hit != 'true'
       uses: actions/checkout@v4
@@ -102,13 +95,11 @@ jobs:
         repository: raspberrypi/pico-sdk
         path: pico-sdk
 
-    # Init the submodules for pico-sdk (if pico-sdk not found in cache)
     - name: init pico-sdk submodules
       if: steps.cache-pico-sdk.outputs.cache-hit != 'true'
       run: cd $GITHUB_WORKSPACE/pico-sdk && git submodule update --init
 
-    # Set PICO_SDK_PATH for make steps
-    - name: set env var
+    - name: set pico sdk path
       run: echo "PICO_SDK_PATH=$GITHUB_WORKSPACE/pico-sdk" >> "$GITHUB_ENV"
 
     - name: cmake
@@ -117,5 +108,5 @@ jobs:
     - name: make
       run: cd PhobGCC-SW/PhobGCC/rp2040/build && make
 
-    - name: log
+    - name: list build dir
       run: ls -l PhobGCC-SW/PhobGCC/rp2040/build
