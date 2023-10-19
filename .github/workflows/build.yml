@@ -40,7 +40,7 @@ jobs:
             - PhobGCC
 
       - name: log
-        run: find . -type f -name "*.hex"
+        run: echo $(find . -type f -name "*.hex")
           
   build-rp2040:
     runs-on: ubuntu-latest
