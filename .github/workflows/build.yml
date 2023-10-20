@@ -56,9 +56,7 @@ jobs:
             - PhobGCC
           verbose: true
 
-      - name: list ino dir
-        run: ls -l . && ls -l sketches-reports && cat sketches-reports/*.json
-  
+
   build-rp2040:
     runs-on: ubuntu-latest
     
@@ -110,6 +108,3 @@ jobs:
       
     - name: make
       run: cd PhobGCC-SW/PhobGCC/rp2040/build && make
-
-    - name: list build dir
-      run: ls -l PhobGCC-SW/PhobGCC/rp2040/build
