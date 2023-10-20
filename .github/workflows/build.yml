@@ -54,9 +54,10 @@ jobs:
               version: 1.0.0
           sketch-paths: |
             - PhobGCC
+          verbose: true
 
       - name: list ino dir
-        run: ls -l PhobGCC
+        run: ls -l . && ls -l sketches-reports && cat sketches-reports/*.json
   
   build-rp2040:
     runs-on: ubuntu-latest
