@@ -47,15 +47,17 @@ jobs:
             - name: "teensy:avr"
               source-url: "https://www.pjrc.com/teensy/package_teensy_index.json"
           libraries: |
-            - name: curveFitting
+            - name: CurveFitting
             - name: Bolder Flight Systems Eigen
             - name: Bounce2
-            - name: teensytimertool
+            - name: TeensyTimerTool
               version: 1.0.0
           sketch-paths: |
             - PhobGCC
 
-
+      - name: list ino dir
+        run: ls -l PhobGCC
+  
   build-rp2040:
     runs-on: ubuntu-latest
     
